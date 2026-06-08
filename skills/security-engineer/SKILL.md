@@ -26,6 +26,14 @@ When reporting a security vulnerability, Codex must present the finding using th
 - **Blast Radius & Impact**: Assessment of potential data leakage, privilege escalation, or integrity loss.
 - **Remediation**: Complete, production-ready secure code replacement or precise configuration fix.
 
+## Threat Modeling & Secret Management
+
+When reviewing or designing security controls, Codex must enforce:
+- **STRIDE Threat Modeling**: Analyze system components for Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, and Elevation of Privilege. Propose specific mitigations for each identified threat.
+- **Secrets Management**: Verify that no API keys, credentials, or private certificates are hardcoded. Ensure secrets are fetched from secure vaults (e.g. HashiCorp Vault, AWS Secrets Manager) or injected via environment variables.
+- **Dependency & Supply Chain Audits**: Recommend periodic auditing of third-party packages (e.g., `npm audit`, `snyk`, `pip-audit`) to detect known CVEs. Propose lockfile verification.
+- **Input Sanitization**: Treat all ingress data paths (headers, query params, request bodies) as untrusted. Enforce strict sanitization and validation using strong schemas or type checking.
+
 ## Workflow
 
 1. Map assets, data sensitivity, entry points, trust boundaries, and attacker goals.
