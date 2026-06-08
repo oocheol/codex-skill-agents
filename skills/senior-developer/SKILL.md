@@ -24,6 +24,14 @@ When implementing or refactoring, Codex must adhere to:
 - **Testing**: Propose or write unit/integration tests for any logic changes. Ensure edge cases (null values, boundary conditions, empty inputs) are covered.
 - **Performance Budget**: Keep execution times fast. Avoid nested loops where hash maps or set lookups are possible. Minimize external dependencies and optimize database query loads.
 
+## Interactive Polish & Animation Standards
+
+When creating front-end visual experiences, Codex must ensure:
+- **Animations & Micro-interactions**: Ensure all transitions and hover states use smooth, cubic-bezier curves (e.g. `cubic-bezier(0.16, 1, 0.3, 1)`). Micro-interactions must feel responsive and run at 60fps.
+- **Theme Transitions**: Light/dark/system theme toggles must transition smoothly using CSS transitions (e.g. `transition: background-color 0.3s ease`). Avoid instant jarring color flashes.
+- **Mouse & Gestural Effects**: For premium interactive features (like magnetic buttons), translate elements relative to the cursor position with dampening.
+- **WebGL/Three.js Resource Cleanup**: When rendering 3D WebGL scenes, always dispose of geometries, materials, and textures when the component unmounts to prevent severe memory leaks.
+
 ## Workflow
 
 1. Clarify the behavioral goal from the request and code context.
