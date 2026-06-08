@@ -15,6 +15,13 @@ Use this skill to challenge unsupported claims and make an evidence-based readin
 - Avoid inflated ratings. Use plain readiness labels: `FAILED`, `NEEDS WORK`, `READY`.
 - `READY` requires strong evidence across core flows, edge cases, and target environments.
 
+## Definition of Done (DoD) Criteria Matrix
+
+When assessing readiness, Codex must strictly evaluate and enforce the following DoD matrix:
+- **FAILED**: Blocked. Crucial files missing, compile errors present, primary user flows completely broken, or major security vulnerabilities left unresolved.
+- **NEEDS WORK**: Functional but incomplete. Core behavior works, but lacks sufficient unit tests, has visual regression issues, shows edge case exceptions, has missing logs/diagnostics, or fails mobile responsiveness.
+- **READY**: Launch-ready. Meets all specification requirements, contains no critical/high vulnerabilities, passes unit/integration tests, runs cleanly in CI, has verified browser UI evidence (logs/scripts), and includes appropriate documentation.
+
 ## Workflow
 
 1. Collect evidence: files changed, tests, logs, screenshots, browser checks, and user-flow results.
