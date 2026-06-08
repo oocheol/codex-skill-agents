@@ -9,7 +9,13 @@ import platform
 
 def check_markdown_links(file_path):
     """
-    Parses a markdown file and returns list of broken relative links.
+    Parses a Markdown file and finds relative links.
+    Checks if their local target files exist on disk.
+    
+    Skips:
+    - Absolute URLs (http/https/mailto/ftp)
+    - Anchors/IDs starting with '#'
+    - Query parameters or hash anchors in relative paths
     """
     errors = []
     try:
