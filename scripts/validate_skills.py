@@ -2,6 +2,8 @@
 import os
 import sys
 import re
+import tempfile
+import shutil
 
 def check_markdown_links(file_path):
     """
@@ -199,7 +201,76 @@ def validate_skill_dir(skill_dir_path, skill_name):
             
     return errors
 
+def run_self_tests():
+    print("Running validator self-tests...")
+    temp_dir = tempfile.mkdtemp()
+    try:
+        mock_skill_dir = os.path.join(temp_dir, "mock-skill")
+        os.makedirs(mock_skill_dir)
+        
+        # 1. Create a malformed SKILL.md
+        skill_md_content = """---
+name: wrong-name
+description:
+---
+This is a test skill.
+Link to [invalid](non-existent.md)
+"""
+        with open(os.path.join(mock_skill_dir, "SKILL.md"), "w", encoding="utf-8") as f:
+            f.write(skill_md_content)
+            
+        # 2. Create agents dir but malformed openai.yaml
+        os.makedirs(os.path.join(mock_skill_dir, "agents"))
+        openai_yaml_content = """interface:
+  display_name: "Mock Skill"
+  short_description: "A mock skill for testing"
+  default_prompt: "Run this without using the dollar sign name"
+policy:
+  # Missing allow_implicit_invocation
+"""
+        with open(os.path.join(mock_skill_dir, "agents", "openai.yaml"), "w", encoding="utf-8") as f:
+            f.write(openai_yaml_content)
+            
+        # Run validate_skill_dir on the mock directory
+        errors = validate_skill_dir(mock_skill_dir, "mock-skill")
+        
+        expected_errors = [
+            "Consistency error: SKILL.md name 'wrong-name' does not match folder name 'mock-skill'",
+            "SKILL.md front-matter missing 'description'",
+            "SKILL.md: Broken relative link: '[invalid](non-existent.md)' -> target not found at 'non-existent.md'",
+            "Missing 'references' directory",
+            "Consistency error: 'interface.default_prompt' does not mention '$mock-skill'",
+            "'agents/openai.yaml' missing or invalid 'policy.allow_implicit_invocation' (must be boolean)"
+        ]
+        
+        missing_errors = []
+        for expected in expected_errors:
+            found = False
+            for err in errors:
+                if expected in err:
+                    found = True
+                    break
+            if not found:
+                missing_errors.append(expected)
+                
+        if missing_errors:
+            print("[-] Self-test FAILED! The validator did not detect the following expected errors:")
+            for err in missing_errors:
+                print(f"    - {err}")
+            print("Detected errors were:")
+            for err in errors:
+                print(f"    - {err}")
+            sys.exit(1)
+        else:
+            print("[+] Self-test PASSED! All expected malformations were successfully detected.")
+    finally:
+        shutil.rmtree(temp_dir)
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
+        run_self_tests()
+        sys.exit(0)
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(script_dir)
     skills_dir = os.path.join(repo_root, "skills")
