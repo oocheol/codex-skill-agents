@@ -114,7 +114,7 @@ def parse_simple_yaml(content):
                 data[current_key] = {}
     return data
 
-def validate_skill_dir(skill_dir_path):
+def validate_skill_dir(skill_dir_path, skill_name):
     errors = []
     
     # 1. Check SKILL.md existence
@@ -137,6 +137,9 @@ def validate_skill_dir(skill_dir_path):
     else:
         if "name" not in fm or not fm["name"]:
             errors.append("SKILL.md front-matter missing 'name'")
+        elif fm["name"] != skill_name:
+            errors.append(f"Consistency error: SKILL.md name '{fm['name']}' does not match folder name '{skill_name}'")
+            
         if "description" not in fm or not fm["description"]:
             errors.append("SKILL.md front-matter missing 'description'")
             
@@ -184,6 +187,8 @@ def validate_skill_dir(skill_dir_path):
                 errors.append("'agents/openai.yaml' missing 'interface.short_description'")
             if "default_prompt" not in interface or not interface["default_prompt"]:
                 errors.append("'agents/openai.yaml' missing 'interface.default_prompt'")
+            elif f"${skill_name}" not in interface["default_prompt"]:
+                errors.append(f"Consistency error: 'interface.default_prompt' does not mention '${skill_name}'")
                 
         if "policy" not in yaml_data or not isinstance(yaml_data["policy"], dict):
             errors.append("'agents/openai.yaml' is missing 'policy' section")
@@ -210,7 +215,7 @@ def main():
         if entry.is_dir():
             skills.append(entry.name)
             skill_path = os.path.join(skills_dir, entry.name)
-            errors = validate_skill_dir(skill_path)
+            errors = validate_skill_dir(skill_path, entry.name)
             if errors:
                 print(f"[-] Skill '{entry.name}' has validation errors:")
                 for err in errors:
