@@ -15,6 +15,14 @@ Use this skill to design or review backend systems with scalability, reliability
 - Include auth, authorization, input validation, observability, backup, and migration concerns.
 - Call out tradeoffs, operational risks, and rollout steps.
 
+## Architectural Checkpoints
+
+When reviewing or designing backend structures, Codex must evaluate:
+- **API Reliability**: Ensure REST/GraphQL endpoints use pagination, validation, rate limiting, and idempotency keys (especially for write/mutative operations).
+- **Data Consistency**: Define boundary rules for databases. Specify transaction scopes, locking behavior, and distributed consistency patterns (e.g. Saga, Outbox) for multi-service operations.
+- **Security & Auth**: Mandate OAuth2, JWT, or Session-based token security with RBAC (Role-Based Access Control) or ABAC (Attribute-Based Access Control).
+- **Observability**: Require tracing headers (e.g. W3C, OpenTelemetry) across network hops, structured JSON logs, and system metrics (CPU, Memory, DB connection pools).
+
 ## Workflow
 
 1. Map domain entities, data flows, trust boundaries, and expected load.
