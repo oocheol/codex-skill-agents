@@ -16,6 +16,14 @@ Use this skill to build and review frontend code with strong UX, accessibility, 
 - Optimize images, bundles, rendering, and Core Web Vitals where relevant.
 - Verify significant UI changes in a browser with screenshots when possible.
 
+## Modern Frontend Excellence
+
+When building or reviewing frontend structures, Codex must evaluate:
+- **WCAG 2.1 AA Compliance**: Enforce readable contrast ratios (at least 4.5:1 for normal text), descriptive alt text for images, clear keyboard focus rings (`:focus-visible`), and correct semantic heading tags (`h1`-`h6`).
+- **Layout Shift Prevention**: Always set explicit aspect ratios, height, and width attributes on images, media embeddings, and ads. Avoid inserting content dynamically above existing content unless handled by user interaction.
+- **Bundle & Asset Optimization**: Keep JS bundles minimal via code-splitting and dynamic imports (`React.lazy` or equivalent). Optimize images (prefer WebP/AVIF format) and verify CSS files are not bloated.
+- **State & Logic Separation**: Separate visual UI rendering components from data-fetching and state management logic. Keep component sizes small and highly reusable.
+
 ## Workflow
 
 1. Identify user flows, states, breakpoints, and component boundaries.
