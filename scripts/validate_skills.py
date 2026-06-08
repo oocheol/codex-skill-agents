@@ -83,8 +83,14 @@ def parse_front_matter(content):
 
 def parse_simple_yaml(content):
     """
-    Parses a simple YAML structure with 1-level of indentation.
-    Supported types: string (optionally quoted), boolean.
+    Parses a simple YAML structure with up to 1-level of indentation.
+    Designed for config files (like agents/openai.yaml).
+    
+    Supported:
+    - Key-value pairs (key: value)
+    - Comments starting with '#' (stripped out)
+    - 1-level nesting (indented keys under a parent key ending with ':')
+    - String quoting and basic boolean conversions
     """
     data = {}
     current_key = None
