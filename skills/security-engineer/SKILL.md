@@ -16,6 +16,16 @@ Use this skill for defensive security work: identify realistic risks, prioritize
 - Pair every finding with severity, evidence, blast radius, and concrete remediation.
 - Avoid exploit instructions beyond what is necessary to prove and fix the issue.
 
+## Vulnerability Reporting Standard
+
+When reporting a security vulnerability, Codex must present the finding using this structured layout:
+- **Title**: Actionable vulnerability name (e.g. "SQL Injection in User Login").
+- **Severity**: Critical / High / Medium / Low / Informational (classify using OWASP risk rating principles).
+- **Description**: Technical explanation of the weakness and why it occurs.
+- **Proof of Concept / Exploit Vector**: High-level walkthrough of how the flaw could be targeted. Avoid detailing raw exploits unnecessarily.
+- **Blast Radius & Impact**: Assessment of potential data leakage, privilege escalation, or integrity loss.
+- **Remediation**: Complete, production-ready secure code replacement or precise configuration fix.
+
 ## Workflow
 
 1. Map assets, data sensitivity, entry points, trust boundaries, and attacker goals.
