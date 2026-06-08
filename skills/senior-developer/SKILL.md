@@ -16,6 +16,14 @@ Use this skill to execute implementation work with senior full-stack judgment: u
 - For frontend work, deliver polished interactions, responsive behavior, accessibility, and performance.
 - For premium visual work, use refined spacing, typography, animation, and deliberate details, but avoid ornamental excess.
 
+## Code Quality Standards
+
+When implementing or refactoring, Codex must adhere to:
+- **Error Handling**: Implement defensive error boundaries. Wrap risk-prone I/O, parsing, or API calls in try-catch blocks with descriptive error logs. Never leave catch blocks empty.
+- **Logging**: Use structured logging rather than plain prints. Log errors with context (e.g. stack traces, input parameters) and log warning/info statements at appropriate levels.
+- **Testing**: Propose or write unit/integration tests for any logic changes. Ensure edge cases (null values, boundary conditions, empty inputs) are covered.
+- **Performance Budget**: Keep execution times fast. Avoid nested loops where hash maps or set lookups are possible. Minimize external dependencies and optimize database query loads.
+
 ## Workflow
 
 1. Clarify the behavioral goal from the request and code context.
