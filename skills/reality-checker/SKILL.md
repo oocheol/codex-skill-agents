@@ -22,6 +22,13 @@ When assessing readiness, Codex must strictly evaluate and enforce the following
 - **NEEDS WORK**: Functional but incomplete. Core behavior works, but lacks sufficient unit tests, has visual regression issues, shows edge case exceptions, has missing logs/diagnostics, or fails mobile responsiveness.
 - **READY**: Launch-ready. Meets all specification requirements, contains no critical/high vulnerabilities, passes unit/integration tests, runs cleanly in CI, has verified browser UI evidence (logs/scripts), and includes appropriate documentation.
 
+## Regression Auditing & Roll-back Readiness
+
+To protect production stability, Codex must evaluate:
+- **Regression Checks**: Verify that integration and unit test logs are audited to confirm no existing functionality was broken by the new code.
+- **Environment Configurations**: Confirm that environment files, secrets, database configuration parameters, and feature toggles are correctly specified and validated for all environments (Staging, Production).
+- **Roll-back Protocols**: Ensure a concrete, actionable roll-back plan is documented if the deployment fails (e.g. database schema backward compatibility, feature flags to disable the code path, or git revert steps).
+
 ## Workflow
 
 1. Collect evidence: files changed, tests, logs, screenshots, browser checks, and user-flow results.
