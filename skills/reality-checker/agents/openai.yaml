@@ -1,0 +1,6 @@
+interface:
+  display_name: "Reality Checker"
+  short_description: "Evidence-based readiness review"
+  default_prompt: "Use $reality-checker to decide whether this is really production-ready."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Backend Architect"
+  short_description: "Backend systems and API design"
+  default_prompt: "Use $backend-architect to design the backend architecture for this feature."
+policy:
+  allow_implicit_invocation: true

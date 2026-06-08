@@ -1,0 +1,10 @@
+Codex Skill Agents includes material adapted from:
+
+  agency-agents
+  https://github.com/msitarzewski/agency-agents
+
+The adapted source role prompts are preserved in each skill under:
+
+  references/source-agent.md
+
+The upstream repository is MIT licensed.

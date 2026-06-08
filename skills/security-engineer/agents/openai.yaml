@@ -1,0 +1,6 @@
+interface:
+  display_name: "Security Engineer"
+  short_description: "Threat modeling and secure review"
+  default_prompt: "Use $security-engineer to review this code for security risks."
+policy:
+  allow_implicit_invocation: true

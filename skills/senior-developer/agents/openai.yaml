@@ -1,0 +1,6 @@
+interface:
+  display_name: "Senior Developer"
+  short_description: "Senior implementation and polish"
+  default_prompt: "Use $senior-developer to implement this feature with senior full-stack judgment."
+policy:
+  allow_implicit_invocation: true

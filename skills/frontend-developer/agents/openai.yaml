@@ -1,0 +1,6 @@
+interface:
+  display_name: "Frontend Developer"
+  short_description: "Frontend UI and UX implementation"
+  default_prompt: "Use $frontend-developer to build and verify this frontend change."
+policy:
+  allow_implicit_invocation: true

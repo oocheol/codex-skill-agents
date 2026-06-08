@@ -1,0 +1,6 @@
+interface:
+  display_name: "Evidence Collector"
+  short_description: "Screenshot-backed QA evidence"
+  default_prompt: "Use $evidence-collector to gather QA evidence for this UI."
+policy:
+  allow_implicit_invocation: true
