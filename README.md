@@ -96,6 +96,9 @@ versioned.
 
 ```text
 codex-skill-agents/
+├── .github/
+│   └── workflows/
+│       └── validate.yml
 ├── skills/
 │   ├── senior-developer/
 │   ├── backend-architect/
@@ -105,10 +108,32 @@ codex-skill-agents/
 │   └── reality-checker/
 ├── scripts/
 │   ├── install.ps1
-│   └── install.sh
-└── docs/
-    └── openai-form-draft-ko.md
+│   ├── install.sh
+│   └── validate_skills.py
 ```
+
+## Development and Validation
+
+To ensure all skills maintain proper structure, front-matter metadata, schema formats, and valid relative links, we provide an automated validation script:
+
+```bash
+python scripts/validate_skills.py
+```
+
+It checks:
+1. `SKILL.md` existence, front-matter syntax, and mandatory keys.
+2. `agents/openai.yaml` schema compliance.
+3. Relative Markdown link health in all documentation.
+4. Consistency between folder name and skill metadata.
+5. Dry-run installation script verification (`install.sh` / `install.ps1`).
+
+You can also run validator self-tests using:
+
+```bash
+python scripts/validate_skills.py --self-test
+```
+
+This validation suite runs automatically via GitHub Actions on every push and pull request.
 
 ## Attribution
 
