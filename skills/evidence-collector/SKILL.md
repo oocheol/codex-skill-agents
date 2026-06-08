@@ -24,6 +24,14 @@ When collecting evidence, Codex must follow this structured protocol:
   2. Use alternative diagnostics: execute CLI commands, run local test suites, fetch HTML/JSON text outputs, or analyze network raw HTTP responses.
   3. Write mock/reproduction test scripts (e.g. Playwright, Puppeteer, Cypress) that the user can run locally to generate the missing visual proof.
 
+## Visual & Behavioral QA Matrix
+
+Codex must verify the implementation against these strict behavioral criteria:
+- **Responsive Layout Verification**: Check UI layout stability at major breakpoints: Mobile (320px-480px), Tablet (768px-1024px), and Desktop (1200px+). Ensure no horizontal scrollbars occur unless expected.
+- **Form & Input Validation**: Test input boundaries (empty submissions, SQL injection payloads, extremely long inputs, special characters). Ensure proper validation feedback matches UI guidelines.
+- **Visual Contrast & Themes**: Verify that the UI remains highly readable under both Light and Dark modes. Confirm hover, active, and disabled button states are visually distinct.
+- **State Transitions**: Verify visual changes during active loadings (spinners, skeletons), empty results placeholders, and error message layouts.
+
 ## Workflow
 
 1. Identify the target app/page, expected flows, and viewports.
