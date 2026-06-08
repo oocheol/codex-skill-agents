@@ -4,6 +4,8 @@ import sys
 import re
 import tempfile
 import shutil
+import subprocess
+import platform
 
 def check_markdown_links(file_path):
     """
@@ -266,6 +268,61 @@ policy:
     finally:
         shutil.rmtree(temp_dir)
 
+def run_installer_tests():
+    print("\nRunning installer validation tests...")
+    temp_dir = tempfile.mkdtemp()
+    try:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        repo_root = os.path.dirname(script_dir)
+        
+        is_windows = platform.system() == "Windows"
+        
+        if is_windows:
+            ps_script = os.path.join(script_dir, "install.ps1")
+            print(f"Testing PowerShell installer: {ps_script}")
+            cmd = [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", ps_script,
+                "-Destination", temp_dir
+            ]
+        else:
+            sh_script = os.path.join(script_dir, "install.sh")
+            print(f"Testing Bash installer: {sh_script}")
+            try:
+                os.chmod(sh_script, 0o755)
+            except Exception:
+                pass
+            cmd = ["bash", sh_script, temp_dir]
+            
+        res = subprocess.run(cmd, capture_output=True, text=True, cwd=repo_root)
+        if res.returncode != 0:
+            print(f"[-] Installer failed with exit code {res.returncode}")
+            print(f"Stdout:\n{res.stdout}")
+            print(f"Stderr:\n{res.stderr}")
+            sys.exit(1)
+            
+        print("[+] Installer executed successfully.")
+        
+        expected_skills = ["backend-architect", "evidence-collector", "frontend-developer", "reality-checker", "security-engineer", "senior-developer"]
+        for skill in expected_skills:
+            skill_dest_path = os.path.join(temp_dir, skill)
+            if not os.path.isdir(skill_dest_path):
+                print(f"[-] Installed skill directory '{skill}' not found at destination.")
+                sys.exit(1)
+            
+            errors = validate_skill_dir(skill_dest_path, skill)
+            if errors:
+                print(f"[-] Installed skill '{skill}' has validation errors:")
+                for err in errors:
+                    print(f"    - {err}")
+                sys.exit(1)
+                
+        print("[+] All installed skills are structurally valid.")
+    finally:
+        shutil.rmtree(temp_dir)
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
         run_self_tests()
@@ -301,7 +358,9 @@ def main():
         sys.exit(1)
     else:
         print("Validation PASSED!")
-        sys.exit(0)
+        
+    run_installer_tests()
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
