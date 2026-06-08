@@ -119,6 +119,15 @@ def parse_simple_yaml(content):
     return data
 
 def validate_skill_dir(skill_dir_path, skill_name):
+    """
+    Validates a single skill directory.
+    Performs the following checks:
+    1. SKILL.md existence, front-matter parsing, and required fields.
+    2. Naming consistency between directory name and front-matter name.
+    3. Relative link health inside SKILL.md.
+    4. references/source-agent.md existence and relative link health.
+    5. agents/openai.yaml existence and schema conformity.
+    """
     errors = []
     
     # 1. Check SKILL.md existence
