@@ -55,8 +55,9 @@ def check_markdown_links(file_path):
 
 def parse_front_matter(content):
     """
-    Parses YAML front-matter from file content.
-    Returns a dictionary of key-value pairs if found, or None.
+    Parses simple YAML front-matter from a file content.
+    Expects front-matter to be enclosed between '---' lines at the start of the file.
+    Returns a dictionary of parsed key-value pairs, or None if invalid.
     """
     lines = content.splitlines()
     if not lines or lines[0].strip() != "---":
