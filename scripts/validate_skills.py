@@ -1,6 +1,47 @@
 #!/usr/bin/env python3
 import os
 import sys
+import re
+
+def check_markdown_links(file_path):
+    """
+    Parses a markdown file and returns list of broken relative links.
+    """
+    errors = []
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+    except Exception as e:
+        return [f"Failed to read file for link checking: {e}"]
+        
+    # Regular expression to find markdown links: [text](url)
+    link_pattern = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
+    links = link_pattern.findall(content)
+    
+    file_dir = os.path.dirname(file_path)
+    for text, url in links:
+        url = url.strip()
+        # Skip absolute links
+        if url.startswith(("http://", "https://", "mailto:", "ftp:")):
+            continue
+        # Skip absolute system paths or anchors
+        if url.startswith("#"):
+            continue
+            
+        # Remove anchor part of the link if present (e.g., file.md#section)
+        clean_url = url.split('#', 1)[0]
+        if not clean_url:
+            continue
+            
+        # Target path relative to the file directory
+        target_path = os.path.join(file_dir, clean_url)
+        # Normalize path
+        target_path = os.path.normpath(target_path)
+        
+        if not os.path.exists(target_path):
+            errors.append(f"Broken relative link: '[{text}]({url})' -> target not found at '{clean_url}'")
+            
+    return errors
 
 def parse_front_matter(content):
     """
@@ -99,6 +140,23 @@ def validate_skill_dir(skill_dir_path):
         if "description" not in fm or not fm["description"]:
             errors.append("SKILL.md front-matter missing 'description'")
             
+    # 1.1 Check relative links in SKILL.md
+    link_errors = check_markdown_links(skill_md_path)
+    for err in link_errors:
+        errors.append(f"SKILL.md: {err}")
+
+    # 1.2 Check references/source-agent.md existence and relative links
+    ref_dir = os.path.join(skill_dir_path, "references")
+    ref_md_path = os.path.join(ref_dir, "source-agent.md")
+    if not os.path.isdir(ref_dir):
+        errors.append("Missing 'references' directory")
+    elif not os.path.isfile(ref_md_path):
+        errors.append("Missing 'references/source-agent.md' file")
+    else:
+        ref_link_errors = check_markdown_links(ref_md_path)
+        for err in ref_link_errors:
+            errors.append(f"references/source-agent.md: {err}")
+            
     # 2. Check agents/openai.yaml existence and schema
     agents_dir = os.path.join(skill_dir_path, "agents")
     yaml_path = os.path.join(agents_dir, "openai.yaml")
@@ -159,7 +217,7 @@ def main():
                     print(f"    - {err}")
                 has_errors = True
             else:
-                print(f"[+] Skill '{entry.name}' is valid (Step 2: SKILL.md checks)")
+                print(f"[+] Skill '{entry.name}' is valid")
 
     print(f"\nVerification finished. Found {len(skills)} skills.")
     if has_errors:
