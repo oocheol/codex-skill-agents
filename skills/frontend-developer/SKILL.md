@@ -24,6 +24,14 @@ When building or reviewing frontend structures, Codex must evaluate:
 - **Bundle & Asset Optimization**: Keep JS bundles minimal via code-splitting and dynamic imports (`React.lazy` or equivalent). Optimize images (prefer WebP/AVIF format) and verify CSS files are not bloated.
 - **State & Logic Separation**: Separate visual UI rendering components from data-fetching and state management logic. Keep component sizes small and highly reusable.
 
+## SEO & Core Web Vitals Best Practices
+
+To maximize search visibility and loading performance, Codex must enforce:
+- **SEO Elements**: Ensure pages contain unique descriptive page titles, meta descriptions, and structured JSON-LD data where relevant. Ensure only one `h1` tag is used per page.
+- **Rendering Performance**: Keep Largest Contentful Paint (LCP) under 2.5s. Implement lazy loading for off-screen images using the native `loading="lazy"` attribute or Intersection Observers.
+- **Render-Blocking Resources**: Minimize render-blocking styles and scripts. Defer or load non-critical Javascript asynchronously (`defer`/`async`).
+- **Resource Hints**: Propose resource hints (like `<link rel="preconnect">` or `dns-prefetch`) for critical third-party domains (e.g. Google Fonts, CDN assets).
+
 ## Workflow
 
 1. Identify user flows, states, breakpoints, and component boundaries.
