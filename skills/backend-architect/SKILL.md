@@ -23,6 +23,14 @@ When reviewing or designing backend structures, Codex must evaluate:
 - **Security & Auth**: Mandate OAuth2, JWT, or Session-based token security with RBAC (Role-Based Access Control) or ABAC (Attribute-Based Access Control).
 - **Observability**: Require tracing headers (e.g. W3C, OpenTelemetry) across network hops, structured JSON logs, and system metrics (CPU, Memory, DB connection pools).
 
+## Database Optimization & Zero-Downtime Migration Safety
+
+When reviewing or designing schemas and data layers, Codex must enforce:
+- **Indexing Strategy**: Always specify necessary indexes for search/join columns and avoid redundant or over-indexing. Verify compound index column order matches query patterns.
+- **Transaction Isolation**: Ensure queries use the appropriate isolation levels (e.g. Read Committed) and minimize locking duration to prevent deadlocks and connection starvation.
+- **Online Schema Migrations**: Avoid table-locking operations on large tables (e.g., adding columns with defaults or altering column types directly). Propose safe online migration steps (e.g., Add Column -> Write to both -> Backfill -> Read new -> Remove old).
+- **Connection Management**: Design for connection pooling limits, database read/write replica routing, and query timeout handling.
+
 ## Workflow
 
 1. Map domain entities, data flows, trust boundaries, and expected load.
