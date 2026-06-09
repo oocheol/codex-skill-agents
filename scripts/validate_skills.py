@@ -358,9 +358,13 @@ def run_installer_tests():
         shutil.rmtree(temp_dir)
 
 def main():
-    if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
+    args = sys.argv[1:]
+
+    if args and args[0] == "--self-test":
         run_self_tests()
         sys.exit(0)
+
+    skip_installer = "--skip-installer-tests" in args
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(script_dir)
@@ -392,8 +396,9 @@ def main():
         sys.exit(1)
     else:
         print("Validation PASSED!")
-        
-    run_installer_tests()
+
+    if not skip_installer:
+        run_installer_tests()
     sys.exit(0)
 
 if __name__ == "__main__":
