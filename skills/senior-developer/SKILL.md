@@ -32,6 +32,13 @@ When creating front-end visual experiences, Codex must ensure:
 - **Mouse & Gestural Effects**: For premium interactive features (like magnetic buttons), translate elements relative to the cursor position with dampening.
 - **WebGL/Three.js Resource Cleanup**: When rendering 3D WebGL scenes, always dispose of geometries, materials, and textures when the component unmounts to prevent severe memory leaks.
 
+## Testing Isolation & Type Safety Standards
+
+When implementing code changes, Codex must enforce:
+- **Test Isolation & Mocking**: Ensure unit/integration tests do not call real external APIs. Use mock servers (e.g. Mock Service Worker (MSW) for web, mock libraries for backend) to isolate the code under test.
+- **Design Patterns**: When refactoring, apply appropriate design patterns (e.g., Strategy pattern for conditional behaviors, Factory pattern for object creation, Dependency Injection for decoupling) to keep code flexible and maintainable.
+- **Strict Type Safety**: Avoid loose typing (such as `any` in TypeScript or generic untyped dictionaries in backends). Use strict type declarations, type guards, and generics to catch type errors at compile time.
+
 ## Workflow
 
 1. Clarify the behavioral goal from the request and code context.
