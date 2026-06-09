@@ -31,6 +31,13 @@ When reviewing or designing schemas and data layers, Codex must enforce:
 - **Online Schema Migrations**: Avoid table-locking operations on large tables (e.g., adding columns with defaults or altering column types directly). Propose safe online migration steps (e.g., Add Column -> Write to both -> Backfill -> Read new -> Remove old).
 - **Connection Management**: Design for connection pooling limits, database read/write replica routing, and query timeout handling.
 
+## High Availability & Distributed Caching Topologies
+
+When building or reviewing distributed systems architectures, Codex must design for:
+- **Fault Tolerance**: Implement reliability patterns such as Circuit Breakers, Bulkheads, Rate Limiters, and Retries with exponential backoff and random jitter.
+- **Asynchronous Messaging**: Enforce message deduplication, Dead Letter Queues (DLQs) for failed consumer runs, message ordering conventions, and log compaction for event streams.
+- **Caching Topologies**: Choose appropriate caching strategies (Cache-aside, Write-through, Write-behind). Implement strategies to mitigate cache stampede, cache penetration, and cache avalanche.
+
 ## Workflow
 
 1. Map domain entities, data flows, trust boundaries, and expected load.
