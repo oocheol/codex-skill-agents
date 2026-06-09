@@ -79,7 +79,11 @@ def parse_front_matter(content):
     for line in front_matter_lines:
         if ":" in line:
             key, val = line.split(":", 1)
-            data[key.strip()] = val.strip()
+            val = val.strip()
+            # Unwrap quoted values so `name: "foo"` matches the folder name "foo"
+            if len(val) >= 2 and val[0] == val[-1] and val[0] in ('"', "'"):
+                val = val[1:-1]
+            data[key.strip()] = val
     return data
 
 def parse_simple_yaml(content):
@@ -97,7 +101,6 @@ def parse_simple_yaml(content):
     current_key = None
     for line in content.splitlines():
         # Strip inline comments only when '#' appears outside quoted strings
-        stripped_for_comment = line
         in_quote = None
         comment_idx = None
         for i, ch in enumerate(line):
