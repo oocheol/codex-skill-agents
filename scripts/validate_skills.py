@@ -95,8 +95,20 @@ def parse_simple_yaml(content):
     data = {}
     current_key = None
     for line in content.splitlines():
-        if '#' in line:
-            line = line.split('#', 1)[0]
+        # Strip inline comments only when '#' appears outside quoted strings
+        stripped_for_comment = line
+        in_quote = None
+        comment_idx = None
+        for i, ch in enumerate(line):
+            if ch in ('"', "'") and in_quote is None:
+                in_quote = ch
+            elif ch == in_quote:
+                in_quote = None
+            elif ch == '#' and in_quote is None:
+                comment_idx = i
+                break
+        if comment_idx is not None:
+            line = line[:comment_idx]
         line = line.rstrip()
         if not line:
             continue
