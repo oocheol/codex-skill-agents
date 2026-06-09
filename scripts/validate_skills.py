@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import sys
 import re
@@ -358,13 +359,19 @@ def run_installer_tests():
         shutil.rmtree(temp_dir)
 
 def main():
-    args = sys.argv[1:]
+    parser = argparse.ArgumentParser(description="Validate Codex skill directories.",
+                                     allow_abbrev=False)
+    parser.add_argument("--self-test", action="store_true",
+                        help="run the validator self-tests and exit")
+    parser.add_argument("--skip-installer-tests", action="store_true",
+                        help="skip the installer validation tests")
+    args = parser.parse_args()
 
-    if args and args[0] == "--self-test":
+    if args.self_test:
         run_self_tests()
         sys.exit(0)
 
-    skip_installer = "--skip-installer-tests" in args
+    skip_installer = args.skip_installer_tests
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(script_dir)
