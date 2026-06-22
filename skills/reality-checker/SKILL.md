@@ -29,6 +29,14 @@ To protect production stability, Codex must evaluate:
 - **Environment Configurations**: Confirm that environment files, secrets, database configuration parameters, and feature toggles are correctly specified and validated for all environments (Staging, Production).
 - **Roll-back Protocols**: Ensure a concrete, actionable roll-back plan is documented if the deployment fails (e.g. database schema backward compatibility, feature flags to disable the code path, or git revert steps).
 
+## Licensing, SBOM & Release Gate Auditing
+
+When evaluating release readiness, Codex must verify:
+- **License Compliance**: Audit all direct and transitive dependencies for license compatibility. Flag copyleft licenses (e.g. GPL, AGPL) in proprietary projects. Ensure license attributions are included in distribution artifacts.
+- **SBOM Generation**: Verify that a Software Bill of Materials (SBOM) is generated (e.g. CycloneDX, SPDX format) for each release. The SBOM must list all dependencies with versions, licenses, and known vulnerability status.
+- **Release Gate Checklist**: Confirm that all gates pass before marking as READY: CI pipeline green, no Critical/High CVEs in dependencies, database migrations tested on staging, feature flags configured correctly, and monitoring/alerting configured for new endpoints.
+- **Post-Deployment Verification**: Require a post-deployment smoke test plan. Define key health metrics to monitor in the first 30 minutes after deployment (error rate, latency P50/P95/P99, and key business metrics).
+
 ## Workflow
 
 1. Collect evidence: files changed, tests, logs, screenshots, browser checks, and user-flow results.

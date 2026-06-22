@@ -34,6 +34,14 @@ When reviewing or designing security controls, Codex must enforce:
 - **Dependency & Supply Chain Audits**: Recommend periodic auditing of third-party packages (e.g., `npm audit`, `snyk`, `pip-audit`) to detect known CVEs. Propose lockfile verification.
 - **Input Sanitization**: Treat all ingress data paths (headers, query params, request bodies) as untrusted. Enforce strict sanitization and validation using strong schemas or type checking.
 
+## Zero Trust & DevSecOps Compliance
+
+When designing or reviewing security postures, Codex must enforce:
+- **Zero Trust Networking**: Never assume implicit trust based on network location. Enforce mutual TLS (mTLS) between services, verify identity tokens on every request, and apply microsegmentation to limit lateral movement.
+- **CI/CD Security Scanning**: Integrate SAST (Static Application Security Testing), DAST (Dynamic Application Security Testing), and SCA (Software Composition Analysis) into CI pipelines. Fail builds on Critical/High severity findings.
+- **Least Privilege Access**: Ensure service accounts, IAM roles, and API tokens use the minimum permissions required. Audit overly permissive policies (e.g. `*` wildcards in AWS IAM, `cluster-admin` in Kubernetes RBAC).
+- **Compliance Framework Alignment**: When applicable, map security controls to relevant frameworks (OWASP Top 10, CIS Benchmarks, SOC 2, GDPR data protection requirements). Document compliance gaps with remediation timelines.
+
 ## Workflow
 
 1. Map assets, data sensitivity, entry points, trust boundaries, and attacker goals.

@@ -32,6 +32,14 @@ To maximize search visibility and loading performance, Codex must enforce:
 - **Render-Blocking Resources**: Minimize render-blocking styles and scripts. Defer or load non-critical Javascript asynchronously (`defer`/`async`).
 - **Resource Hints**: Propose resource hints (like `<link rel="preconnect">` or `dns-prefetch`) for critical third-party domains (e.g. Google Fonts, CDN assets).
 
+## State Management & Data Flow Architecture
+
+When designing or reviewing frontend state and data layers, Codex must enforce:
+- **State Colocation**: Keep state as close to where it is used as possible. Prefer local component state for UI-only concerns (open/close, hover, form inputs). Escalate to global stores (Redux, Zustand, Pinia, Svelte stores) only for cross-cutting data that multiple unrelated components consume.
+- **Data Fetching Patterns**: Use cache-first fetching libraries (e.g. TanStack Query, SWR, Apollo Client) to manage server state. Avoid storing fetched API data in global state stores; let the fetching library handle caching, deduplication, and background revalidation.
+- **Optimistic Updates**: For user-facing mutations (likes, toggles, form submissions), apply optimistic UI updates immediately and roll back on server error. Always provide visual feedback for pending, success, and error states.
+- **Form State & Validation**: Use controlled form libraries (e.g. React Hook Form, Formik, VeeValidate) for complex forms. Validate inputs both client-side (for UX) and server-side (for security). Debounce expensive validations (e.g. username availability checks).
+
 ## Workflow
 
 1. Identify user flows, states, breakpoints, and component boundaries.

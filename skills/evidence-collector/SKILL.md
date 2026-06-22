@@ -32,6 +32,14 @@ Codex must verify the implementation against these strict behavioral criteria:
 - **Visual Contrast & Themes**: Verify that the UI remains highly readable under both Light and Dark modes. Confirm hover, active, and disabled button states are visually distinct.
 - **State Transitions**: Verify visual changes during active loadings (spinners, skeletons), empty results placeholders, and error message layouts.
 
+## Visual Regression & Performance Auditing
+
+When establishing or improving QA pipelines, Codex must enforce:
+- **Automated Visual Regression**: Propose pixel-diff or snapshot-based visual regression tools (e.g. Percy, Chromatic, BackstopJS, Playwright visual comparisons) to catch unintended visual changes. Establish baseline screenshots for critical pages and components.
+- **Performance Budget Tracking**: Define and enforce performance budgets (e.g. JS bundle < 200KB gzipped, LCP < 2.5s, FID < 100ms, CLS < 0.1). Integrate Lighthouse CI or similar tools into the CI pipeline to fail builds that exceed budgets.
+- **Accessibility Auditing**: Run automated accessibility audits (e.g. axe-core, Pa11y, Lighthouse accessibility) alongside visual tests. Flag WCAG violations with severity, affected elements, and remediation guidance.
+- **Cross-Browser Evidence**: Document which browser/viewport combinations were tested. For critical flows, capture evidence from at least Chrome, Firefox, and Safari (or their rendering engines).
+
 ## Workflow
 
 1. Identify the target app/page, expected flows, and viewports.
