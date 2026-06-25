@@ -306,6 +306,36 @@ policy:
             sys.exit(1)
         else:
             print("[+] Self-test PASSED! All expected malformations were successfully detected.")
+
+        # Positive case: a fully valid skill must produce zero errors
+        valid_skill_dir = os.path.join(temp_dir, "valid-skill")
+        os.makedirs(os.path.join(valid_skill_dir, "agents"))
+        os.makedirs(os.path.join(valid_skill_dir, "references"))
+
+        with open(os.path.join(valid_skill_dir, "SKILL.md"), "w", encoding="utf-8") as f:
+            f.write("---\nname: valid-skill\ndescription: A valid skill for testing\n---\n\nBody text.\n")
+
+        with open(os.path.join(valid_skill_dir, "references", "source-agent.md"), "w", encoding="utf-8") as f:
+            f.write("# Source agent\n")
+
+        with open(os.path.join(valid_skill_dir, "agents", "openai.yaml"), "w", encoding="utf-8") as f:
+            f.write(
+                "interface:\n"
+                '  display_name: "Valid Skill"\n'
+                '  short_description: "A valid skill"\n'
+                '  default_prompt: "Use $valid-skill to do things."\n'
+                "policy:\n"
+                "  allow_implicit_invocation: true\n"
+            )
+
+        positive_errors = validate_skill_dir(valid_skill_dir, "valid-skill")
+        if positive_errors:
+            print("[-] Self-test FAILED! A valid skill produced unexpected errors:")
+            for err in positive_errors:
+                print(f"    - {err}")
+            sys.exit(1)
+        else:
+            print("[+] Self-test PASSED! Valid skill correctly produces zero errors.")
     finally:
         shutil.rmtree(temp_dir)
 
