@@ -29,7 +29,7 @@ def check_markdown_links(file_path):
     link_pattern = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
     links = link_pattern.findall(content)
     
-    file_dir = os.path.dirname(file_path)
+    file_dir = os.path.dirname(os.path.abspath(file_path))
     for text, url in links:
         url = url.strip()
         # Skip absolute links
@@ -38,17 +38,20 @@ def check_markdown_links(file_path):
         # Skip absolute system paths or anchors
         if url.startswith("#"):
             continue
-            
+
         # Remove anchor part of the link if present (e.g., file.md#section)
         clean_url = url.split('#', 1)[0]
         if not clean_url:
             continue
-            
+
         # Target path relative to the file directory
-        target_path = os.path.join(file_dir, clean_url)
-        # Normalize path
-        target_path = os.path.normpath(target_path)
-        
+        target_path = os.path.normpath(os.path.join(file_dir, clean_url))
+
+        # Reject links that escape the skill directory tree
+        if not target_path.startswith(file_dir + os.sep) and target_path != file_dir:
+            errors.append(f"Path traversal in link: '[{text}]({url})' resolves outside skill directory")
+            continue
+
         if not os.path.exists(target_path):
             errors.append(f"Broken relative link: '[{text}]({url})' -> target not found at '{clean_url}'")
             
