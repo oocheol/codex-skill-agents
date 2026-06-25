@@ -342,14 +342,18 @@ def run_installer_tests():
             sys.exit(1)
             
         print("[+] Installer executed successfully.")
-        
-        expected_skills = ["backend-architect", "evidence-collector", "frontend-developer", "reality-checker", "security-engineer", "senior-developer"]
+
+        # Derive expected skills dynamically from the source skills directory
+        skills_src = os.path.join(repo_root, "skills")
+        expected_skills = sorted(
+            e.name for e in os.scandir(skills_src) if e.is_dir()
+        )
         for skill in expected_skills:
             skill_dest_path = os.path.join(temp_dir, skill)
             if not os.path.isdir(skill_dest_path):
                 print(f"[-] Installed skill directory '{skill}' not found at destination.")
                 sys.exit(1)
-            
+
             errors = validate_skill_dir(skill_dest_path, skill)
             if errors:
                 print(f"[-] Installed skill '{skill}' has validation errors:")
