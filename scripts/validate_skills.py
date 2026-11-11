@@ -8,10 +8,10 @@ import shutil
 import subprocess
 import platform
 
-def check_markdown_links(file_path):
+def check_markdown_links(file_path, root_dir=None):
     """
     Parses a Markdown file and finds relative links.
-    Checks if their local target files exist on disk.
+    Checks if their local target files exist on disk and stay within root_dir.
     
     Skips:
     - Absolute URLs (http/https/mailto/ftp)
@@ -30,10 +30,12 @@ def check_markdown_links(file_path):
     links = link_pattern.findall(content)
     
     file_dir = os.path.dirname(os.path.abspath(file_path))
+    boundary_dir = os.path.normcase(os.path.abspath(root_dir)) if root_dir else os.path.normcase(file_dir)
+
     for text, url in links:
         url = url.strip()
         # Skip absolute links
-        if url.startswith(("http://", "https://", "mailto:", "ftp:")):
+        if url.lower().startswith(("http://", "https://", "mailto:", "ftp:")):
             continue
         # Skip absolute system paths or anchors
         if url.startswith("#"):
@@ -46,9 +48,10 @@ def check_markdown_links(file_path):
 
         # Target path relative to the file directory
         target_path = os.path.normpath(os.path.join(file_dir, clean_url))
+        norm_target = os.path.normcase(target_path)
 
-        # Reject links that escape the skill directory tree
-        if not target_path.startswith(file_dir + os.sep) and target_path != file_dir:
+        # Reject links that escape the allowed root directory tree
+        if not norm_target.startswith(boundary_dir + os.sep) and norm_target != boundary_dir:
             errors.append(f"Path traversal in link: '[{text}]({url})' resolves outside skill directory")
             continue
 
@@ -189,7 +192,7 @@ def validate_skill_dir(skill_dir_path, skill_name):
             errors.append("SKILL.md front-matter missing 'description'")
             
     # 1.1 Check relative links in SKILL.md
-    link_errors = check_markdown_links(skill_md_path)
+    link_errors = check_markdown_links(skill_md_path, root_dir=skill_dir_path)
     for err in link_errors:
         errors.append(f"SKILL.md: {err}")
 
@@ -201,7 +204,7 @@ def validate_skill_dir(skill_dir_path, skill_name):
     elif not os.path.isfile(ref_md_path):
         errors.append("Missing 'references/source-agent.md' file")
     else:
-        ref_link_errors = check_markdown_links(ref_md_path)
+        ref_link_errors = check_markdown_links(ref_md_path, root_dir=skill_dir_path)
         for err in ref_link_errors:
             errors.append(f"references/source-agent.md: {err}")
             
@@ -258,6 +261,7 @@ description:
 ---
 This is a test skill.
 Link to [invalid](non-existent.md)
+Link to [traversal](../../outside.md)
 """
         with open(os.path.join(mock_skill_dir, "SKILL.md"), "w", encoding="utf-8") as f:
             f.write(skill_md_content)
@@ -281,6 +285,7 @@ policy:
             "Consistency error: SKILL.md name 'wrong-name' does not match folder name 'mock-skill'",
             "SKILL.md front-matter missing 'description'",
             "SKILL.md: Broken relative link: '[invalid](non-existent.md)' -> target not found at 'non-existent.md'",
+            "SKILL.md: Path traversal in link: '[traversal](../../outside.md)' resolves outside skill directory",
             "Missing 'references' directory",
             "Consistency error: 'interface.default_prompt' does not mention '$mock-skill'",
             "'agents/openai.yaml' missing or invalid 'policy.allow_implicit_invocation' (must be boolean)"
@@ -313,10 +318,17 @@ policy:
         os.makedirs(os.path.join(valid_skill_dir, "references"))
 
         with open(os.path.join(valid_skill_dir, "SKILL.md"), "w", encoding="utf-8") as f:
-            f.write("---\nname: valid-skill\ndescription: A valid skill for testing\n---\n\nBody text.\n")
+            f.write(
+                "---\n"
+                "name: valid-skill\n"
+                "description: A valid skill for testing\n"
+                "---\n\n"
+                "Body text.\n"
+                "See [source](references/source-agent.md).\n"
+            )
 
         with open(os.path.join(valid_skill_dir, "references", "source-agent.md"), "w", encoding="utf-8") as f:
-            f.write("# Source agent\n")
+            f.write("# Source agent\n\nLink to [parent](../SKILL.md).\n")
 
         with open(os.path.join(valid_skill_dir, "agents", "openai.yaml"), "w", encoding="utf-8") as f:
             f.write(
